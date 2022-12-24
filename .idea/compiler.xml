@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="DawnSqlTransLog" />
+        <module name="DawnSqlServerless" />
+        <module name="DawnSqlLogRecovery" />
+        <module name="DawnSqlLogService" />
+        <module name="DawnSqlLogClient" />
+        <module name="DBeaverWeb" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="DawnSqlLogClient" target="1.8" />
+      <module name="DawnSqlLogRecovery" target="1.8" />
+      <module name="DawnSqlLogService" target="1.8" />
+      <module name="DawnSqlPlus" target="1.5" />
+      <module name="DawnSqlServerless" target="1.8" />
+      <module name="DawnSqlTransLog" target="1.8" />
+      <module name="DBeaverWeb" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>
