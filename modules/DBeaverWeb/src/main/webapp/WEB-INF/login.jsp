@@ -60,6 +60,9 @@
                           </label>
                         </div>
                     </div>
+                    <div class="row">
+                        <p class="text-danger" style="margin-left:18px;">${ err }</p>
+                    </div>
                       </form>
                   </div>
                 </div>

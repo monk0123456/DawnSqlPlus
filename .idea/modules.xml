@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/modules/DBeaverWeb/DBeaverWeb.iml" filepath="$PROJECT_DIR$/modules/DBeaverWeb/DBeaverWeb.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/DawnSqlLogClient/DawnSqlLogClient.iml" filepath="$PROJECT_DIR$/modules/DawnSqlLogClient/DawnSqlLogClient.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/DawnSqlLogRecovery/DawnSqlLogRecovery.iml" filepath="$PROJECT_DIR$/modules/DawnSqlLogRecovery/DawnSqlLogRecovery.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/DawnSqlLogService/DawnSqlLogService.iml" filepath="$PROJECT_DIR$/modules/DawnSqlLogService/DawnSqlLogService.iml" />
+      <module fileurl="file://$PROJECT_DIR$/DawnSqlPlus.iml" filepath="$PROJECT_DIR$/DawnSqlPlus.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/DawnSqlServerless/DawnSqlServerless.iml" filepath="$PROJECT_DIR$/modules/DawnSqlServerless/DawnSqlServerless.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/DawnSqlTransLog/DawnSqlTransLog.iml" filepath="$PROJECT_DIR$/modules/DawnSqlTransLog/DawnSqlTransLog.iml" />
+    </modules>
+  </component>
+</project>

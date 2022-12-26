@@ -20,8 +20,12 @@ public class MyUserController {
 
     @RequestMapping(value = "/login")
     public String login(ModelMap model, HttpServletRequest request,
-                        HttpServletResponse response)
+                        HttpServletResponse response,
+                        @RequestParam(value = "err", required = false) String err)
     {
+        if (!Strings.isNullOrEmpty(err)) {
+            model.addAttribute("err", "user_token 输入错误，或者不存在！");
+        }
         return "login";
     }
 
@@ -32,7 +36,7 @@ public class MyUserController {
         if (!Strings.isNullOrEmpty(user_token))
         {
             List<List<?>> vs = MyRpcDb.login(user_token);
-            if (vs != null && vs.get(0).size() > 0)
+            if (vs != null && vs.size() > 0 && vs.get(0).size() > 0)
             {
                 HttpSession sessoin = request.getSession();
                 sessoin.setAttribute("user_token", user_token);
@@ -58,7 +62,9 @@ public class MyUserController {
                 //return "login";
             }
         }
-        return "redirect:/login";
+
+        //model.addAttribute("err", "user_token 输入错误，或者不存在！");
+        return "redirect:/login?err=user_token 输入错误，或者不存在！";
     }
 
     @RequestMapping(value = "/ajax_login_db")
