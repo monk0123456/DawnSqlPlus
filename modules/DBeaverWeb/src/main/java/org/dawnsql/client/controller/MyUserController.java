@@ -29,6 +29,15 @@ public class MyUserController {
         return "login";
     }
 
+    @RequestMapping(value = "/login_out")
+    public String loginOut(ModelMap model, HttpServletRequest request,
+                        HttpServletResponse response)
+    {
+        HttpSession sessoin = request.getSession();
+        sessoin.removeAttribute("user_token");
+        return "redirect:/login";
+    }
+
     @RequestMapping(value = "/login_db")
     public String login_db(ModelMap model, HttpServletRequest request,
                            HttpServletResponse response,

@@ -25,6 +25,24 @@ public class MyWorkbenchController {
     @Autowired
     private Gson gson;
 
+    @RequestMapping(value = "/work")
+    public String work(ModelMap model, HttpServletRequest request, HttpServletResponse response,
+                       @RequestParam(value = "work_id", required = false) String work_id) throws UnsupportedEncodingException {
+
+        HttpSession sessoin = request.getSession();
+        String user_token = (String) sessoin.getAttribute("user_token");
+        if (Strings.isNullOrEmpty(user_token))
+        {
+            return "redirect:/login";
+        }
+
+        HashMap<String, String> obj = new HashMap<>();
+        obj.put("user_token", user_token);
+        obj.put("work_id", work_id);
+        model.addAttribute("m", obj);
+        return "work";
+    }
+
     @RequestMapping(value = "/dawnclient")
     public String dawnclient(ModelMap model, HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
 
