@@ -59,6 +59,30 @@
                 var ShowWin;
                 var my_tab_id = 'work_panel';
 
+                var tree_store = Ext.create('Ext.data.TreeStore', {
+                                                   autoLoad: false,
+                                                   clearOnLoad: true,
+                                                   clearRemovedOnLoad: true,
+                                                   nodeParam:'id',
+                                                   proxy: {
+                                                       type: 'ajax',
+                                                       //url: '/extjs_case/get_tree_store/',
+                                                       url: '/tree/?user_token=${ m.user_token }',
+                                                       reader: {
+                                                           type: 'json',
+                                                           root: 'root'
+                                                       }
+                                                   },
+                                                   root: {
+                                                       expanded: true,
+                                                       text: '根节点'
+                                                   }
+                                               });
+
+                function my_tree_store() {
+                            tree_store.reload();
+                        }
+
                 var center = Ext.create('Ext.tab.Panel', {
                             //距两边间距
                             style: "padding:0 5px 0 5px",
@@ -203,28 +227,8 @@
                            initComponent: function () {
                                var me = this;
 
-                               var store = Ext.create('Ext.data.TreeStore', {
-                                   autoLoad: false,
-                                   clearOnLoad: true,
-                                   clearRemovedOnLoad: true,
-                                   nodeParam:'id',
-                                   proxy: {
-                                       type: 'ajax',
-                                       //url: '/extjs_case/get_tree_store/',
-                                       url: me.url,
-                                       reader: {
-                                           type: 'json',
-                                           root: 'root'
-                                       }
-                                   },
-                                   root: {
-                                       expanded: true,
-                                       text: '根节点'
-                                   }
-                               });
-
                                var base_config = {
-                                   store: store
+                                   store: tree_store
                                };
 
                                Ext.apply(this, base_config);

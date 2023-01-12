@@ -242,6 +242,7 @@
         function get_sql_type(line) {
             var lst = get_lst_sql(line);
             var create_table = false;
+            var create_schema = false;
             var func = false;
             var last_select = false;
             for (var i in lst)
@@ -249,6 +250,11 @@
                 if (lst[i].match(/^create\s+table\s+/i) != null)
                 {
                     create_table = true;
+                }
+
+                if (lst[i].match(/^create\s+schema\s+/i) != null)
+                {
+                    create_schema = true;
                 }
 
                 if (lst[i].match(/^function\s+/i) != null)
@@ -264,7 +270,7 @@
                     last_select = true;
                 }
             }
-            return {'create_table': create_table, 'func': func, 'last_select': last_select};
+            return {'create_table': create_table, 'func': func, 'last_select': last_select, 'create_schema': create_schema};
         }
     </script>
 
@@ -350,6 +356,10 @@
                       code: vs
                   },
                   success: function (response) {
+                      if (code_type.create_table == true || code_type.create_schema == true)
+                      {
+                          window.parent.my_tree_store();
+                      }
                       Ext.Msg.hide();
                       var result = Ext.decode(response.responseText);
                       if (result.hasOwnProperty('err')) {
@@ -489,6 +499,10 @@
                       code: vs
                   },
                   success: function (response) {
+                      if (code_type.create_table == true || code_type.create_schema == true)
+                      {
+                         window.parent.my_tree_store();
+                      }
                       Ext.Msg.hide();
                       var result = Ext.decode(response.responseText);
                       //console.log(response.responseText);
@@ -497,11 +511,17 @@
                       p_grid.hide();
                       var p_error = edit_form.getComponent('p_error');
                       p_error.removeAll();
-                      if (result.msg != null)
+                      if (result.err != null)
                       {
                           p_error.add(Ext.create('Ext.Component', {
-                              html: result.msg
+                              html: '<span style="color: red; font-weight: bolder;">' + result.err + '</span>'
                           }));
+                      }
+                      else if (result.msg != null)
+                      {
+                         p_error.add(Ext.create('Ext.Component', {
+                             html: result.msg
+                         }));
                       }
                       p_error.show();
                   },

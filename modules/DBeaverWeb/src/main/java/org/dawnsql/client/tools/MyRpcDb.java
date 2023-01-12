@@ -184,15 +184,23 @@ public class MyRpcDb {
     {
         String rs = instance.executeSqlQuery(user_token, sql, "");
         try {
-            HashMap<String, Object> ht = new HashMap<>();
-            ht.put("msg", rs);
-            return ht;
-        } catch (Exception e)
-        {
             HashMap<String, Object> my_rs = gson.fromJson(rs, new TypeToken<HashMap<String, Object>>() {
             }.getType());
+            //HashMap<String, Object> ht = new HashMap<>();
+            if (my_rs.containsKey("err"))
+            {
+                return my_rs;
+            }
+            else
+            {
+                HashMap<String, Object> ht = new HashMap<>();
+                ht.put("msg", rs);
+                return ht;
+            }
+        } catch (Exception e)
+        {
             HashMap<String, Object> ht = new HashMap<>();
-            ht.put("msg", my_rs.get("err"));
+            ht.put("msg", rs);
             return ht;
         }
     }
