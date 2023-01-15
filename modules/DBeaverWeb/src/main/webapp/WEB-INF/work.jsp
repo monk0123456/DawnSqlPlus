@@ -341,204 +341,191 @@
               return;
           }
 
-          var code_type = get_sql_type(vs);
+            var store_url = '/run_select_sql/?user_token=${ m.user_token }';
+            Ext.Msg.wait('正在运行，请稍候...', '信息提示');
+            Ext.Ajax.request({
+                url: '/run_sql/',
+                method: 'POST',
+                params: {
+                    user_token: '${ m.user_token }',
+                    code: vs
+                },
+                success: function (response) {
+                    Ext.Msg.hide();
+                    var result = Ext.decode(response.responseText);
+                    if (result.hasOwnProperty('err')) {
+                        var p_grid = edit_form.getComponent('p_grid');
+                        p_grid.hide();
+                        var p_error = edit_form.getComponent('p_error');
+                        p_error.removeAll();
+                        p_error.add(Ext.create('Ext.Component', {
+                            html: '<span style="color: red; font-weight: bolder;">' + result.err + '</span>'
+                        }));
+                        p_error.show();
+                    }
+                    else if (result.hasOwnProperty('stm'))
+                    {
+                         var stm = result.stm;
+                        if (stm.hasOwnProperty('table') || stm.hasOwnProperty('schema'))
+                        {
+                            window.parent.my_tree_store();
+                        }
 
-          if (code_type.last_select == true)
-          {
-              var store_url = '/run_select_sql/?user_token=${ m.user_token }';
-              Ext.Msg.wait('正在运行，请稍候...', '信息提示');
-              Ext.Ajax.request({
-                  url: '/run_sql/',
-                  method: 'POST',
-                  params: {
-                      user_token: '${ m.user_token }',
-                      select: 1,
-                      code: vs
-                  },
-                  success: function (response) {
-                      if (code_type.create_table == true || code_type.create_schema == true)
-                      {
-                          window.parent.my_tree_store();
-                      }
-                      Ext.Msg.hide();
-                      var result = Ext.decode(response.responseText);
-                      if (result.hasOwnProperty('err')) {
+                        if (stm.hasOwnProperty('select') && stm.hasOwnProperty('code'))
+                        {
+                            var store = new Ext.data.JsonStore({
+                                 proxy:{
+                                     type: 'ajax',
+                                     url: store_url,
+                                     actionMethods: {
+                                         read: 'POST'
+                                     },
+                                     reader: {
+                                         type: 'json',
+                                         root: "root",
+                                         totalProperty: "totalProperty"
+                                     }
+                                 },
+                                 pageSize: 50,
+                                 //remoteSort: true,
+                                 fields: result.columns_name
+                            });
+
+                            store.on('beforeload', function (store, operation, eOpts) {
+                                 Ext.apply(store.proxy.extraParams, {code: stm.code});
+                            });
+
+                            store.load({
+                                 params: {
+                                     code: stm.code,
+                                     start: 0,
+                                     limit: 50
+                                 },
+                                 callback: function(records, operation, success) {
+                                     if (records.length == 1 && records[0].data.hasOwnProperty('err'))
+                                     {
+                                         var err = records[0].data['err'];
+                                         if (err != '') {
+                                             var p_grid = edit_form.getComponent('p_grid');
+                                             p_grid.hide();
+                                             var p_error = edit_form.getComponent('p_error');
+                                             p_error.removeAll();
+                                             p_error.add(Ext.create('Ext.Component', {
+                                                 html: '<span style="color: red; font-weight: bolder;">' + err + '</span>'
+                                             }));
+                                             p_error.show();
+                                         }
+                                     }
+                                     else
+                                     {
+                                         var p_error = edit_form.getComponent('p_error');
+                                         p_error.removeAll();
+                                         p_error.hide();
+                                     }
+                                 }
+                            });
+
+                            var grid = new Ext.grid.GridPanel({
+                                 autoHeight: true,
+                                 stripeRows: true,
+                                 store: store,
+                                 columns: result.columns,
+                                 //autoScroll: true,
+                                 border: true,
+                                 viewConfig: {
+                                     columnsText: "显示/隐藏列",
+                                     sortAscText: "正序排列",
+                                     sortDescText: "倒序排列",
+                                     forceFit: true
+                                 },
+                                 loadMask: {
+                                     msg: '正在加载数据，请稍等．．．'
+                                 },
+                                 listeners: {
+                                    afterrender: function(obj)
+                                    {
+
+                                    }
+                                 },
+                                 //bbar: bbar,
+                                 dockedItems: [{
+                                     xtype: 'pagingtoolbar',
+                                     store: store,
+                                     dock: 'bottom',
+                                     displayInfo: true
+                                 }]
+                             });
+
+                            var p_grid = edit_form.getComponent('p_grid');
+                            p_grid.removeAll();
+                            p_grid.add(grid);
+                            p_grid.show();
+
+                             grid.on('itemdblclick', function (v, record, item, index, e, eOpts) {
+                                 var lst = [];
+                                 for (var m in record.data)
+                                 {
+                                     lst.push({name: m, value: record.data[m]});
+                                 }
+                                 //console.log(lst);
+                                 window.parent.show_win({data: lst});
+                             });
+                        }
+                        else
+                        {
+                              var p_grid = edit_form.getComponent('p_grid');
+                              p_grid.hide();
+                              var p_error = edit_form.getComponent('p_error');
+                              p_error.removeAll();
+                              if (result.err != null)
+                              {
+                                  p_error.add(Ext.create('Ext.Component', {
+                                      html: '<span style="color: red; font-weight: bolder;">' + result.err + '</span>'
+                                  }));
+                              }
+                              else if (result.vs.msg != null)
+                              {
+                                 p_error.add(Ext.create('Ext.Component', {
+                                     html: result.vs.msg
+                                 }));
+                              }
+                              p_error.show();
+                        }
+                    }
+                    else
+                    {
                           var p_grid = edit_form.getComponent('p_grid');
                           p_grid.hide();
                           var p_error = edit_form.getComponent('p_error');
                           p_error.removeAll();
-                          p_error.add(Ext.create('Ext.Component', {
-                              html: '<span style="color: red; font-weight: bolder;">' + result.err + '</span>'
-                          }));
+                          if (result.err != null)
+                          {
+                              p_error.add(Ext.create('Ext.Component', {
+                                  html: '<span style="color: red; font-weight: bolder;">' + result.err + '</span>'
+                              }));
+                          }
+                          else if (result.msg != null)
+                          {
+                             p_error.add(Ext.create('Ext.Component', {
+                                 html: result.msg
+                             }));
+                          }
                           p_error.show();
-                      }
-                      else
-                      {
-                          //console.log(response.responseText);
-                          var store = new Ext.data.JsonStore({
-                               proxy:{
-                                   type: 'ajax',
-                                   url: store_url,
-                                   actionMethods: {
-                                       read: 'POST'
-                                   },
-                                   reader: {
-                                       type: 'json',
-                                       root: "root",
-                                       totalProperty: "totalProperty"
-                                   }
-                               },
-                               pageSize: 50,
-                               //remoteSort: true,
-                               fields: result.columns_name
-                          });
+                    }
+                },
+                failure: function (response) {
+                    Ext.Msg.hide();
 
-                          store.on('beforeload', function (store, operation, eOpts) {
-                               Ext.apply(store.proxy.extraParams, {code: vs});
-                          });
-
-                          store.load({
-                               params: {
-                                   code: vs,
-                                   start: 0,
-                                   limit: 50
-                               },
-                               callback: function(records, operation, success) {
-                                   if (records.length == 1 && records[0].data.hasOwnProperty('err'))
-                                   {
-                                       var err = records[0].data['err'];
-                                       if (err != '') {
-                                           var p_grid = edit_form.getComponent('p_grid');
-                                           p_grid.hide();
-                                           var p_error = edit_form.getComponent('p_error');
-                                           p_error.removeAll();
-                                           p_error.add(Ext.create('Ext.Component', {
-                                               html: '<span style="color: red; font-weight: bolder;">' + err + '</span>'
-                                           }));
-                                           p_error.show();
-                                       }
-                                   }
-                                   else
-                                   {
-                                       var p_error = edit_form.getComponent('p_error');
-                                       p_error.removeAll();
-                                       p_error.hide();
-                                   }
-                               }
-                          });
-
-                          var grid = new Ext.grid.GridPanel({
-                               autoHeight: true,
-                               stripeRows: true,
-                               store: store,
-                               columns: result.columns,
-                               //autoScroll: true,
-                               border: true,
-                               viewConfig: {
-                                   columnsText: "显示/隐藏列",
-                                   sortAscText: "正序排列",
-                                   sortDescText: "倒序排列",
-                                   forceFit: true
-                               },
-                               loadMask: {
-                                   msg: '正在加载数据，请稍等．．．'
-                               },
-                               listeners: {
-                                  afterrender: function(obj)
-                                  {
-
-                                  }
-                               },
-                               //bbar: bbar,
-                               dockedItems: [{
-                                   xtype: 'pagingtoolbar',
-                                   store: store,   // same store GridPanel is using
-                                   dock: 'bottom',
-                                   displayInfo: true
-                               }]
-                           });
-
-                          var p_grid = edit_form.getComponent('p_grid');
-                          p_grid.removeAll();
-                          p_grid.add(grid);
-                          p_grid.show();
-
-                           grid.on('itemdblclick', function (v, record, item, index, e, eOpts) {
-                               var lst = [];
-                               for (var m in record.data)
-                               {
-                                   lst.push({name: m, value: record.data[m]});
-                               }
-                               //console.log(lst);
-                               window.parent.show_win({data: lst});
-                           });
-                      }
-                  },
-                  failure: function (response) {
-                      Ext.Msg.hide();
-
-                      var result = Ext.decode(response.responseText);
-                      //console.log(response.responseText);
-                      Ext.Msg.show({
-                          title: '错误提示',
-                          msg: result.msg,
-                          buttons: Ext.Msg.OK,
-                          minWidth: 100
-                      });
-                  }
-              });
-          }
-          else
-          {
-              Ext.Msg.wait('正在运行，请稍候...', '信息提示');
-              Ext.Ajax.request({
-                  url: '/run_sql/',
-                  method: 'POST',
-                  params: {
-                      user_token: '${ m.user_token }',
-                      code: vs
-                  },
-                  success: function (response) {
-                      if (code_type.create_table == true || code_type.create_schema == true)
-                      {
-                         window.parent.my_tree_store();
-                      }
-                      Ext.Msg.hide();
-                      var result = Ext.decode(response.responseText);
-                      //console.log(response.responseText);
-
-                      var p_grid = edit_form.getComponent('p_grid');
-                      p_grid.hide();
-                      var p_error = edit_form.getComponent('p_error');
-                      p_error.removeAll();
-                      if (result.err != null)
-                      {
-                          p_error.add(Ext.create('Ext.Component', {
-                              html: '<span style="color: red; font-weight: bolder;">' + result.err + '</span>'
-                          }));
-                      }
-                      else if (result.msg != null)
-                      {
-                         p_error.add(Ext.create('Ext.Component', {
-                             html: result.msg
-                         }));
-                      }
-                      p_error.show();
-                  },
-                  failure: function (response) {
-                      Ext.Msg.hide();
-
-                      var result = Ext.decode(response.responseText);
-                      //console.log(response.responseText);
-                      Ext.Msg.show({
-                          title: '错误提示',
-                          msg: result.msg,
-                          buttons: Ext.Msg.OK,
-                          minWidth: 100
-                      });
-                  }
-              });
-          }
+                    var result = Ext.decode(response.responseText);
+                    //console.log(response.responseText);
+                    Ext.Msg.show({
+                        title: '错误提示',
+                        msg: result.msg,
+                        buttons: Ext.Msg.OK,
+                        minWidth: 100
+                    });
+                }
+            });
        }
 
        function load_to_db()

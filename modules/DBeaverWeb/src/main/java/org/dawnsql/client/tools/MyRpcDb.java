@@ -7,10 +7,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import org.dawnsql.client.rpc.MyRpcClient;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class MyRpcDb {
 
@@ -21,6 +18,21 @@ public class MyRpcDb {
 
     private static MyRpcClient instance = new MyRpcClient();
 
+    public static HashMap<String, Object> getHm(final String rs)
+    {
+        HashMap<String, Object> my_rs = null;
+        try
+        {
+            my_rs = gson.fromJson(rs, new TypeToken<HashMap<String, Object>>() {
+            }.getType());
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return my_rs;
+    }
+
     /**
      * 读取所有的 schema
      * */
@@ -28,13 +40,26 @@ public class MyRpcDb {
     {
         List<HashMap<String, String>> root = new ArrayList<>();
         String rs = instance.executeSqlQuery(user_token, "SELECT SCHEMA_NAME FROM sys.SCHEMAS", "schema");
-        List<List<?>> my_rs = gson.fromJson(rs, new TypeToken<List<List<?>>>(){}.getType());
-        for (List<?> r : my_rs)
+        HashMap<String, Object> ht = getHm(rs);
+        if (ht != null && ht.containsKey("vs"))
         {
-            HashMap<String, String> hashMap = new HashMap<>();
-            hashMap.put("id", r.get(0).toString());
-            hashMap.put("text", r.get(0).toString());
-            root.add(hashMap);
+            List<List<?>> my_rs = (List<List<?>>) ht.get("vs");
+            for (List<?> r : my_rs) {
+                HashMap<String, String> hashMap = new HashMap<>();
+                hashMap.put("id", r.get(0).toString());
+                hashMap.put("text", r.get(0).toString());
+                root.add(hashMap);
+            }
+        }
+        else {
+            List<List<?>> my_rs = gson.fromJson(rs, new TypeToken<List<List<?>>>() {
+            }.getType());
+            for (List<?> r : my_rs) {
+                HashMap<String, String> hashMap = new HashMap<>();
+                hashMap.put("id", r.get(0).toString());
+                hashMap.put("text", r.get(0).toString());
+                root.add(hashMap);
+            }
         }
         return root;
     }
@@ -67,15 +92,30 @@ public class MyRpcDb {
     {
         List<HashMap<String, Object>> root = new ArrayList<>();
         String rs = instance.executeSqlQuery(user_token, String.format("SELECT TABLE_NAME FROM sys.TABLES WHERE SCHEMA_NAME = '%s'", schema_name), "schema");
-        List<List<?>> my_rs = gson.fromJson(rs, new TypeToken<List<List<?>>>(){}.getType());
-        for (List<?> r : my_rs)
+        HashMap<String, Object> ht = getHm(rs);
+        if (ht != null && ht.containsKey("vs"))
         {
-            HashMap<String, Object> hashMap = new HashMap<>();
-            hashMap.put("id", r.get(0).toString());
-            hashMap.put("text", r.get(0).toString());
-            hashMap.put("schema", schema_name);
-            hashMap.put("leaf", true);
-            root.add(hashMap);
+            List<List<?>> my_rs = (List<List<?>>) ht.get("vs");
+            for (List<?> r : my_rs) {
+                HashMap<String, Object> hashMap = new HashMap<>();
+                hashMap.put("id", r.get(0).toString());
+                hashMap.put("text", r.get(0).toString());
+                hashMap.put("schema", schema_name);
+                hashMap.put("leaf", true);
+                root.add(hashMap);
+            }
+        }
+        else {
+            List<List<?>> my_rs = gson.fromJson(rs, new TypeToken<List<List<?>>>() {
+            }.getType());
+            for (List<?> r : my_rs) {
+                HashMap<String, Object> hashMap = new HashMap<>();
+                hashMap.put("id", r.get(0).toString());
+                hashMap.put("text", r.get(0).toString());
+                hashMap.put("schema", schema_name);
+                hashMap.put("leaf", true);
+                root.add(hashMap);
+            }
         }
 
         return root;
@@ -89,15 +129,31 @@ public class MyRpcDb {
         HashMap<String, Object> hashMap = new HashMap<>();
         try {
             String rs = instance.executeSqlQuery(user_token, String.format("SELECT * FROM %s.%s", schema_name, table_name), "meta");
-            Map<String, Integer> my_rs = gson.fromJson(rs, new TypeToken<Map<String, Integer>>() {
-            }.getType());
-            hashMap.put("success", my_rs);
+            HashMap<String, Object> ht = getHm(rs);
+            if (ht != null && ht.containsKey("vs"))
+            {
+                Map<String, Integer> my_rs = (Map<String, Integer>) ht.get("vs");
+                hashMap.put("success", my_rs);
+            }
+            else {
+                Map<String, Integer> my_rs = gson.fromJson(rs, new TypeToken<Map<String, Integer>>() {
+                }.getType());
+                hashMap.put("success", my_rs);
+            }
         } catch (Exception e)
         {
             String rs = instance.executeSqlQuery(user_token, String.format("SELECT * FROM %s.%s", schema_name, table_name), "meta");
-            Map<String, String> my_rs = gson.fromJson(rs, new TypeToken<Map<String, Integer>>() {
-            }.getType());
-            hashMap.put("err", my_rs);
+            HashMap<String, Object> ht = getHm(rs);
+            if (ht != null && ht.containsKey("vs"))
+            {
+                Map<String, String> my_rs = (Map<String, String>) ht.get("vs");
+                hashMap.put("err", my_rs);
+            }
+            else {
+                Map<String, String> my_rs = gson.fromJson(rs, new TypeToken<Map<String, Integer>>() {
+                }.getType());
+                hashMap.put("err", my_rs);
+            }
         }
         return hashMap;
     }
@@ -108,7 +164,16 @@ public class MyRpcDb {
     public static List<List<?>> re_register(String group_name)
     {
         String rs = instance.executeSqlQuery("", String.format("SELECT m.id FROM MY_META.MY_USERS_GROUP m WHERE m.GROUP_NAME = '%s'", group_name), "schema");
-        List<List<?>> my_rs = gson.fromJson(rs, new TypeToken<List<List<?>>>(){}.getType());
+        List<List<?>> my_rs;
+        HashMap<String, Object> ht = getHm(rs);
+        if (ht != null && ht.containsKey("vs"))
+        {
+            my_rs = (List<List<?>>) ht.get("vs");
+        }
+        else
+        {
+            my_rs = gson.fromJson(rs, new TypeToken<List<List<?>>>(){}.getType());
+        }
         return my_rs;
     }
 
@@ -118,7 +183,16 @@ public class MyRpcDb {
     public static List<List<?>> login(String user_token)
     {
         String rs = instance.executeSqlQuery("", String.format("SELECT m.id FROM MY_META.MY_USERS_GROUP m WHERE m.USER_TOKEN = '%s'", user_token), "schema");
-        List<List<?>> my_rs = gson.fromJson(rs, new TypeToken<List<List<?>>>(){}.getType());
+        List<List<?>> my_rs;
+        HashMap<String, Object> ht = getHm(rs);
+        if (ht != null && ht.containsKey("vs"))
+        {
+            my_rs = (List<List<?>>) ht.get("vs");
+        }
+        else
+        {
+            my_rs = gson.fromJson(rs, new TypeToken<List<List<?>>>(){}.getType());
+        }
         return my_rs;
     }
 
@@ -128,8 +202,16 @@ public class MyRpcDb {
     public static int register_db(String group_name, String user_token)
     {
         String rs = instance.executeSqlQuery("", String.format("create schema %s;add_user_group('%s', '%s', 'all', '%s');", group_name, group_name + user_token), "my_meta");
-        if (!Strings.isNullOrEmpty(rs))
-            return 1;
+        HashMap<String, Object> ht = getHm(rs);
+        if (ht != null && ht.containsKey("vs"))
+        {
+            if (!Strings.isNullOrEmpty(String.valueOf(ht.get("vs"))))
+                return 1;
+        }
+        else {
+            if (!Strings.isNullOrEmpty(rs))
+                return 1;
+        }
         return 0;
     }
 
@@ -139,7 +221,15 @@ public class MyRpcDb {
     public static Integer get_table_count(String user_token, String schema, String table_name)
     {
         String rs = instance.executeSqlQuery(user_token, String.format("SELECT count(*) FROM %s.%s", schema, table_name), "count");
-        Integer my_rs = gson.fromJson(rs, new TypeToken<Integer>(){}.getType());
+        Integer my_rs = 0;
+        HashMap<String, Object> ht = getHm(rs);
+        if (ht != null && ht.containsKey("vs"))
+        {
+            my_rs = ((Double)ht.get("vs")).intValue();
+        }
+        else {
+            my_rs = gson.fromJson(rs, new TypeToken<Integer>() {}.getType());
+        }
         return my_rs;
     }
 
@@ -153,7 +243,19 @@ public class MyRpcDb {
         ps.put("limit", limit);
         ps.put("row", 1);
         String rs = instance.executeSqlQuery(user_token, String.format("SELECT * FROM %s.%s", schema, table_name), gson.toJson(ps));
+        HashMap<String, Object> ht = getHm(rs);
+        if (ht != null && ht.containsKey("vs"))
+        {
+            return ht.get("vs").toString();
+        }
         return rs;
+    }
+
+    public static Boolean isSelect(Map<String, String> stm)
+    {
+        if (stm != null && stm.containsKey("select"))
+            return true;
+        return false;
     }
 
     /**
@@ -164,15 +266,40 @@ public class MyRpcDb {
         HashMap<String, Object> hashMap = new HashMap<>();
         try {
             String rs = instance.executeSqlQuery(user_token, sql, "meta");
-            Map<String, Integer> my_rs = gson.fromJson(rs, new TypeToken<Map<String, Integer>>() {
-            }.getType());
-            hashMap.put("success", my_rs);
-        } catch (Exception e)
-        {
+            HashMap<String, Object> ht = getHm(rs);
+            if (ht != null && ht.containsKey("vs"))
+            {
+                if (isSelect((Map<String, String>) ht.get("stm")))
+                {
+                    Map<String, Integer> my_rs = (Map<String, Integer>) ht.get("vs");
+                    hashMap.put("success", my_rs);
+                }
+                else
+                {
+                    hashMap.put("success", ht.get("vs").toString());
+                }
+            }
+            else {
+                Map<String, Integer> my_rs = gson.fromJson(rs, new TypeToken<Map<String, Integer>>() {}.getType());
+                hashMap.put("success", my_rs);
+            }
+        } catch (Exception e) {
             String rs = instance.executeSqlQuery(user_token, sql, "meta");
-            Map<String, String> my_rs = gson.fromJson(rs, new TypeToken<Map<String, String>>() {
-            }.getType());
-            hashMap.put("err", my_rs);
+            HashMap<String, Object> ht = getHm(rs);
+            if (ht != null && ht.containsKey("vs")) {
+                if (isSelect((Map<String, String>) ht.get("stm")))
+                {
+                    Map<String, String> my_rs = (Map<String, String>) ht.get("vs");
+                    hashMap.put("err", my_rs);
+                }
+                else {
+                    hashMap.put("err", ht.get("vs").toString());
+                }
+            } else {
+                Map<String, String> my_rs = gson.fromJson(rs, new TypeToken<Map<String, String>>() {
+                }.getType());
+                hashMap.put("err", my_rs);
+            }
         }
         return hashMap;
     }
@@ -180,29 +307,96 @@ public class MyRpcDb {
     /**
      * 执行 Dawn Sql 语句
      * */
-    public static HashMap<String, Object> run_dawn_sql(String user_token, String sql)
-    {
+    public static HashMap<String, Object> run_dawn_sql(String user_token, String sql) {
         String rs = instance.executeSqlQuery(user_token, sql, "");
         try {
             HashMap<String, Object> my_rs = gson.fromJson(rs, new TypeToken<HashMap<String, Object>>() {
             }.getType());
-            //HashMap<String, Object> ht = new HashMap<>();
-            if (my_rs.containsKey("err"))
-            {
+            if (my_rs.containsKey("err")) {
                 return my_rs;
-            }
-            else
-            {
+            } else if (my_rs.containsKey("vs")) {
+                if (isSelect((Map<String, String>) my_rs.get("stm")))
+                {
+                    HashMap<String, Object> ht = new HashMap<>();
+                    ht.put("msg", my_rs.get("vs"));
+                    return ht;
+                }
+                else {
+                    HashMap<String, Object> ht = new HashMap<>();
+                    ht.put("msg", my_rs.get("vs"));
+                    return ht;
+                }
+            } else {
                 HashMap<String, Object> ht = new HashMap<>();
                 ht.put("msg", rs);
                 return ht;
             }
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
             HashMap<String, Object> ht = new HashMap<>();
             ht.put("msg", rs);
             return ht;
         }
+    }
+
+    /**
+     * 执行 Dawn Sql 语句
+     * */
+    public static String run_my_dawn_sql(String user_token, String sql) {
+        String rs = instance.executeSqlQuery(user_token, sql, "");
+        try {
+            HashMap<String, Object> ht = getHm(rs);
+            if (ht != null && ht.containsKey("stm"))
+            {
+                if (isSelect((Map<String, String>) ht.get("stm")))
+                {
+                    // 是否返回的是 meta
+                    Map<String, String> mcode = (Map<String, String>) ht.get("stm");
+                    if (mcode.containsKey("code"))
+                    {
+                        Map<String, Integer> rs_meta = (Map<String, Integer>) ht.get("vs");
+                        HashMap<String, Object> ht_rs = new HashMap<>();
+                        List<String> columns_name = new ArrayList<>();
+                        List<HashMap<String, String>> columns = new ArrayList<>();
+                        for (String k : rs_meta.keySet()) {
+                            columns_name.add(k);
+                            HashMap<String, String> cm = new HashMap<>();
+                            cm.put("text", k);
+                            cm.put("dataIndex", k);
+                            cm.put("tooltip", k);
+                            columns.add(cm);
+                        }
+                        ht_rs.put("columns_name", columns_name);
+                        ht_rs.put("columns", columns);
+                        //ht_rs.put("code", mcode.get("code"));
+                        ht_rs.put("stm", ht.get("stm"));
+                        return gson.toJson(ht_rs);
+                    }
+                }
+                else
+                {
+                    HashMap<String, Object> ht_1 = new HashMap<>();
+                    ht_1.put("msg", ht.get("vs").toString());
+                    return gson.toJson(ht_1);
+                }
+            }
+            else if (ht != null && ht.containsKey("err"))
+            {
+                HashMap<String, Object> ht_1 = new HashMap<>();
+                ht_1.put("msg", ht.get("err").toString());
+                return gson.toJson(ht_1);
+            }
+            else
+            {
+                HashMap<String, Object> ht_1 = new HashMap<>();
+                ht_1.put("msg", rs);
+                return  gson.toJson(ht_1);
+            }
+        } catch (Exception e) {
+            HashMap<String, Object> ht = new HashMap<>();
+            ht.put("msg", rs);
+            return  gson.toJson(ht);
+        }
+        return rs;
     }
 
     /**
@@ -214,7 +408,20 @@ public class MyRpcDb {
         ps.put("start", start);
         ps.put("limit", limit);
         ps.put("select", 1);
+        ps.put("data", 1);
         String rs = instance.executeSqlQuery(user_token, sql, gson.toJson(ps));
+        HashMap<String, Object> my_rs = getHm(rs);
+        if (my_rs != null) {
+            if (my_rs.containsKey("vs")) {
+                return gson.toJson(my_rs.get("vs"));
+            } else if (my_rs.containsKey("err")) {
+                List<HashMap<String, String>> lstrs = new ArrayList<>();
+                HashMap<String, String> map = new HashMap<>();
+                map.put("err", my_rs.get("err").toString());
+                lstrs.add(map);
+                return gson.toJson(lstrs);
+            }
+        }
         //List<List<?>> my_rs = gson.fromJson(rs, new TypeToken<List<List<?>>>(){}.getType());
         return rs;
     }

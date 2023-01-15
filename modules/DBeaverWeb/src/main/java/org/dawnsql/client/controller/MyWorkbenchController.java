@@ -178,44 +178,67 @@ public class MyWorkbenchController {
     public @ResponseBody
     String run_sql(ModelMap model, HttpServletRequest request,
                    HttpServletResponse response,
-                   @RequestParam(value = "code", required = false) String code,
-                   @RequestParam(value = "select", required = false) Integer select) throws UnsupportedEncodingException {
+                   @RequestParam(value = "code", required = false) String code) throws UnsupportedEncodingException {
 
         HttpSession sessoin=request.getSession();
         String user_token = (String) sessoin.getAttribute("user_token");
         HashMap<String, Object> ht = new HashMap<>();
         if (!Strings.isNullOrEmpty(user_token))
         {
-            if (select != null && select == 1) {
-                HashMap<String, Object> hashMap = MyRpcDb.run_select_meta(user_token, code);
-                if (hashMap.containsKey("success")) {
-                    Map<String, Integer> rs = (Map<String, Integer>) hashMap.get("success");
-                    List<String> columns_name = new ArrayList<>();
-                    List<HashMap<String, String>> columns = new ArrayList<>();
-                    for (String k : rs.keySet()) {
-                        columns_name.add(k);
-                        HashMap<String, String> cm = new HashMap<>();
-                        cm.put("text", k);
-                        cm.put("dataIndex", k);
-                        cm.put("tooltip", k);
-                        columns.add(cm);
-                    }
-                    ht.put("columns_name", columns_name);
-                    ht.put("columns", columns);
-                }
-                else
-                {
-                    return gson.toJson(hashMap.get("err"));
-                }
-            }
-            else
-            {
-                HashMap<String, Object> map = MyRpcDb.run_dawn_sql(user_token, code);
-                return gson.toJson(map);
-            }
+            String rs = MyRpcDb.run_my_dawn_sql(user_token, code);
+            return rs;
         }
         return gson.toJson(ht);
     }
+
+//    @RequestMapping(value = "/run_sql")
+//    public @ResponseBody
+//    String run_sql(ModelMap model, HttpServletRequest request,
+//                   HttpServletResponse response,
+//                   @RequestParam(value = "code", required = false) String code,
+//                   @RequestParam(value = "select", required = false) Integer select) throws UnsupportedEncodingException {
+//
+//        HttpSession sessoin=request.getSession();
+//        String user_token = (String) sessoin.getAttribute("user_token");
+//        HashMap<String, Object> ht = new HashMap<>();
+//        if (!Strings.isNullOrEmpty(user_token))
+//        {
+//            if (select != null && select == 1) {
+//                HashMap<String, Object> hashMap = MyRpcDb.run_select_meta(user_token, code);
+//                if (hashMap.containsKey("success")) {
+//                    if (hashMap.get("success") instanceof Map) {
+//                        Map<String, Integer> rs = (Map<String, Integer>) hashMap.get("success");
+//                        List<String> columns_name = new ArrayList<>();
+//                        List<HashMap<String, String>> columns = new ArrayList<>();
+//                        for (String k : rs.keySet()) {
+//                            columns_name.add(k);
+//                            HashMap<String, String> cm = new HashMap<>();
+//                            cm.put("text", k);
+//                            cm.put("dataIndex", k);
+//                            cm.put("tooltip", k);
+//                            columns.add(cm);
+//                        }
+//                        ht.put("columns_name", columns_name);
+//                        ht.put("columns", columns);
+//                    }
+//                    else
+//                    {
+//
+//                    }
+//                }
+//                else
+//                {
+//                    return gson.toJson(hashMap.get("err"));
+//                }
+//            }
+//            else
+//            {
+//                HashMap<String, Object> map = MyRpcDb.run_dawn_sql(user_token, code);
+//                return gson.toJson(map);
+//            }
+//        }
+//        return gson.toJson(ht);
+//    }
 
     @RequestMapping(value = "/load_code")
     public @ResponseBody

@@ -20,11 +20,10 @@
                   <div class="panel-heading"><h3 class="panel-title">说明</h3></div>
                   <div class="panel-body">
                     <div class="list-group">
-                      <a href="#" class="list-group-item">1、注册的名字，为 DawnSql 用户组的名字，并且注册成功后会为这个用户组分配一个 schema</a>
-                      <a href="#" class="list-group-item">2、连接数据库用的是 user_token，注册成功后直接用 user_token 来登录即可</a>
-                        <a href="#" class="list-group-item">3、为了让 user_token 不可能有重复，真实的 user_token 是用户组名+用户自己填写的 user_token</a>
-                      <a href="#" class="list-group-item">4、Web 版的客户端包含了，绝大数的功能，但是不包括，root 用户的功能，用户要试用完整的功能还需要自己来下载安装文件</a>
-                      <a href="#" class="list-group-item">5、Web 版的程序也是完全开源的！且可以集成到用户自己的应用程序中。例如：可以将它集成到 SAAS、PAAS、DAAS 中，方便你们客户扩展其应用</a>
+                      <a href="#" class="list-group-item">1、DawnSql 接受 user_token 登录。如果要在 JDBC 中使用，也需要添加 user_token</a>
+                      <a href="#" class="list-group-item">2、root 用户登录，它的 user_token 在安装目录的配置文件中</a>
+                      <a href="#" class="list-group-item">3、我们建议用户时候 DBeaverWeb, 因为我们可以方便的扩展这个程序</a>
+                      <a href="#" class="list-group-item">4、Web 版的程序也是完全开源的！且可以集成到用户自己的应用程序中。例如：可以将它集成到 SAAS、PAAS、DAAS 中，方便你们客户扩展其应用</a>
                     </div>
                   </div>
                 </div>
@@ -32,13 +31,13 @@
             <div class="col-md-6">
                 <div class="panel panel-primary">
                   <div class="panel-heading">
-                    <h3 class="panel-title">注册</h3>
+                    <h3 class="panel-title">登录</h3>
                   </div>
                   <div class="panel-body">
                       <form id="from_register" action="<c:url value="/login_db/" />" method="post">
                     <div class="input-group" style="margin-bottom: 20px;">
-                      <input type="password" class="form-control" id='user_token' name="user_token" placeholder="用户组名+user_token" aria-describedby="basic-addon2"/>
-                        <span class="badge">例如：用户组名为：张三，user_token为：123，此处输入为：张三123</span>
+                      <input type="password" class="form-control" id='user_token' name="user_token" placeholder="user_token" aria-describedby="basic-addon2"/>
+                        <span class="badge">例如：user_token为：张三123，此处输入为：张三123</span>
                     </div>
                     <div class="row">
                         <div class="col-md-6">
@@ -48,7 +47,7 @@
                         </div>
                         <div class="col-md-6">
                            <span class="input-group-btn">
-                              <a href="<c:url value="/register/" />" class="btn btn-default" style="margin-bottom: 28px;">注册</a>
+
                            </span>
                         </div>
                     </div>
