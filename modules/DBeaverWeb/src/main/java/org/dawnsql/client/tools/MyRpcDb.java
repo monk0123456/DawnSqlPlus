@@ -23,8 +23,7 @@ public class MyRpcDb {
         HashMap<String, Object> my_rs = null;
         try
         {
-            my_rs = gson.fromJson(rs, new TypeToken<HashMap<String, Object>>() {
-            }.getType());
+            my_rs = gson.fromJson(rs, new TypeToken<HashMap<String, Object>>() {}.getType());
         }
         catch (Exception e)
         {
@@ -242,6 +241,7 @@ public class MyRpcDb {
         ps.put("start", start);
         ps.put("limit", limit);
         ps.put("row", 1);
+        ps.put("data", 1);
         String rs = instance.executeSqlQuery(user_token, String.format("SELECT * FROM %s.%s", schema, table_name), gson.toJson(ps));
         HashMap<String, Object> ht = getHm(rs);
         if (ht != null && ht.containsKey("vs"))
