@@ -340,6 +340,13 @@
           {
               return;
           }
+          else
+          {
+                var p_grid = edit_form.getComponent('p_grid');
+                p_grid.hide();
+                var p_error = edit_form.getComponent('p_error');
+                p_error.removeAll();
+          }
 
             var store_url = '/run_select_sql/?user_token=${ m.user_token }';
             Ext.Msg.wait('正在运行，请稍候...', '信息提示');
@@ -373,27 +380,42 @@
 
                         if (stm.hasOwnProperty('select') && stm.hasOwnProperty('code'))
                         {
-                            var store = new Ext.data.JsonStore({
-                                 proxy:{
-                                     type: 'ajax',
-                                     url: store_url,
-                                     actionMethods: {
-                                         read: 'POST'
+                            var store;
+                            try
+                            {
+                                store = new Ext.data.JsonStore({
+                                     proxy:{
+                                         type: 'ajax',
+                                         url: store_url,
+                                         actionMethods: {
+                                             read: 'POST'
+                                         },
+                                         reader: {
+                                             type: 'json',
+                                             root: "root",
+                                             totalProperty: "totalProperty"
+                                         }
                                      },
-                                     reader: {
-                                         type: 'json',
-                                         root: "root",
-                                         totalProperty: "totalProperty"
-                                     }
-                                 },
-                                 pageSize: 50,
-                                 //remoteSort: true,
-                                 fields: result.columns_name
-                            });
+                                     pageSize: 50,
+                                     //remoteSort: true,
+                                     fields: result.columns_name
+                                });
 
-                            store.on('beforeload', function (store, operation, eOpts) {
-                                 Ext.apply(store.proxy.extraParams, {code: stm.code});
-                            });
+                                store.on('beforeload', function (store, operation, eOpts) {
+                                     Ext.apply(store.proxy.extraParams, {code: stm.code});
+                                });
+                            }
+                            catch (ex)
+                            {
+                                var p_grid = edit_form.getComponent('p_grid');
+                                p_grid.hide();
+                                var p_error = edit_form.getComponent('p_error');
+                                p_error.removeAll();
+                                p_error.add(Ext.create('Ext.Component', {
+                                    html: '<span style="color: red; font-weight: bolder;">select 语句中查询的项要用别名，避免 extjs 转换错误！</span>'
+                                }));
+                                p_error.show();
+                            }
 
                             store.load({
                                  params: {
