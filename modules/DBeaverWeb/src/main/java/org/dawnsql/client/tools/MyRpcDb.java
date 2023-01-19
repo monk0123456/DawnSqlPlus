@@ -408,12 +408,14 @@ public class MyRpcDb {
         ps.put("start", start);
         ps.put("limit", limit);
         ps.put("select", 1);
+        ps.put("row", 1);
         ps.put("data", 1);
         String rs = instance.executeSqlQuery(user_token, sql, gson.toJson(ps));
         HashMap<String, Object> my_rs = getHm(rs);
         if (my_rs != null) {
             if (my_rs.containsKey("vs")) {
-                return gson.toJson(my_rs.get("vs"));
+                String myvs = my_rs.get("vs").toString();
+                return myvs;
             } else if (my_rs.containsKey("err")) {
                 List<HashMap<String, String>> lstrs = new ArrayList<>();
                 HashMap<String, String> map = new HashMap<>();
