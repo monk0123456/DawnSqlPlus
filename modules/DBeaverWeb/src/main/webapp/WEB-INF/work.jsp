@@ -424,9 +424,9 @@
                                      limit: 50
                                  },
                                  callback: function(records, operation, success) {
-                                     if (records.length == 1 && records[0].data.hasOwnProperty('err'))
+                                     if (records.length == 1 && records[0].raw.hasOwnProperty('err'))
                                      {
-                                         var err = records[0].data['err'];
+                                         var err = records[0].raw['err'];
                                          if (err != '') {
                                              var p_grid = edit_form.getComponent('p_grid');
                                              p_grid.hide();
