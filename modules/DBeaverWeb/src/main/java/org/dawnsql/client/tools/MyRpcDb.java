@@ -381,9 +381,9 @@ public class MyRpcDb {
             }
             else if (ht != null && ht.containsKey("err"))
             {
-                HashMap<String, Object> ht_1 = new HashMap<>();
-                ht_1.put("msg", ht.get("err").toString());
-                return gson.toJson(ht_1);
+                //HashMap<String, Object> ht_1 = new HashMap<>();
+                //ht_1.put("msg", ht.get("err").toString());
+                return gson.toJson(ht);
             }
             else
             {
@@ -408,7 +408,6 @@ public class MyRpcDb {
         ps.put("start", start);
         ps.put("limit", limit);
         ps.put("select", 1);
-        //ps.put("row", 1);
         ps.put("data", 1);
         String rs = instance.executeSqlQuery(user_token, sql, gson.toJson(ps));
         HashMap<String, Object> my_rs = getHm(rs);
