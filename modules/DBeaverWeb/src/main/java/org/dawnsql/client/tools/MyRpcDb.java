@@ -376,6 +376,10 @@ public class MyRpcDb {
                 {
                     HashMap<String, Object> ht_1 = new HashMap<>();
                     ht_1.put("msg", ht.get("vs").toString());
+                    if (ht.containsKey("stm"))
+                    {
+                        ht_1.put("stm", ht.get("stm"));
+                    }
                     return gson.toJson(ht_1);
                 }
             }
