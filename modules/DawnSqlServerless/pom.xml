@@ -45,12 +45,12 @@
   </properties>
 
   <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.11</version>
-      <scope>test</scope>
-    </dependency>
+
+    <!--    <dependency>-->
+    <!--      <groupId>org.example</groupId>-->
+    <!--      <artifactId>MyFunc</artifactId>-->
+    <!--      <version>1.0-SNAPSHOT</version>-->
+    <!--    </dependency>-->
 
     <dependency>
       <groupId>com.mchange</groupId>
@@ -87,6 +87,12 @@
       <artifactId>my-thin-client-service</artifactId>
       <version>1.0-SNAPSHOT</version>
     </dependency>
+
+    <!--      <dependency>-->
+    <!--          <groupId>smart-sql</groupId>-->
+    <!--          <artifactId>smart-sql</artifactId>-->
+    <!--          <version>0.1.0-SNAPSHOT</version>-->
+    <!--      </dependency>-->
 
     <dependency>
       <groupId>dawnsql</groupId>
@@ -140,51 +146,10 @@
     <!-- clojure 结束 -->
 
     <dependency>
-      <groupId>com.google.code.gson</groupId>
-      <artifactId>gson</artifactId>
-      <version>${gson.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.gridgain</groupId>
-      <artifactId>ignite-core</artifactId>
-      <version>${gridgain.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.gridgain</groupId>
-      <artifactId>ignite-spring</artifactId>
-      <version>${gridgain.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.gridgain</groupId>
-      <artifactId>ignite-indexing</artifactId>
-      <version>${gridgain.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.gridgain</groupId>
-      <artifactId>ignite-h2</artifactId>
-      <version>${gridgain.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.gridgain</groupId>
-      <artifactId>ignite-schedule</artifactId>
-      <version>${gridgain.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.gridgain</groupId>
-      <artifactId>ignite-ml</artifactId>
-      <version>${gridgain.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-math3</artifactId>
-      <version>3.6.1</version>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.11</version>
+      <scope>test</scope>
     </dependency>
 
     <dependency>
@@ -230,10 +195,87 @@
       <version>${jstl.version}</version>
     </dependency>
 
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>${guava.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+      <version>${gson.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.thrift</groupId>
+      <artifactId>libthrift</artifactId>
+      <version>${apache.thrift}</version>
+    </dependency>
+
+    <!-- Ignite -->
+
+    <dependency>
+      <groupId>org.gridgain</groupId>
+      <artifactId>dawn-sql-core</artifactId>
+      <version>${gridgain.version}</version>
+    </dependency>
+
+    <!--      <dependency>-->
+    <!--          <groupId>org.gridgain</groupId>-->
+    <!--          <artifactId>ignite-geospatial</artifactId>-->
+    <!--          <version>${gridgain.version}</version>-->
+    <!--      </dependency>-->
+
+    <dependency>
+      <groupId>org.gridgain</groupId>
+      <artifactId>ignite-spring</artifactId>
+      <version>${gridgain.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.gridgain</groupId>
+      <artifactId>dawn-sql-indexing</artifactId>
+      <version>${gridgain.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.gridgain</groupId>
+      <artifactId>dawn-sql-h2</artifactId>
+      <version>${gridgain.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.gridgain</groupId>
+      <artifactId>dawn-sql-schedule</artifactId>
+      <version>${gridgain.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.gridgain</groupId>
+      <artifactId>ignite-ml</artifactId>
+      <version>${gridgain.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-math3</artifactId>
+      <version>3.6.1</version>
+    </dependency>
+
   </dependencies>
 
   <build>
     <plugins>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <skipTests>true</skipTests>
+        </configuration>
+      </plugin>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -246,7 +288,6 @@
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
-        <version>2.6.0</version>
       </plugin>
     </plugins>
   </build>

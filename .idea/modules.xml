@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/modules/DBeaverWeb/DBeaverWeb.iml" filepath="$PROJECT_DIR$/modules/DBeaverWeb/DBeaverWeb.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/DawnSqlLib/DawnSqlLib.iml" filepath="$PROJECT_DIR$/modules/DawnSqlLib/DawnSqlLib.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/DawnSqlLogClient/DawnSqlLogClient.iml" filepath="$PROJECT_DIR$/modules/DawnSqlLogClient/DawnSqlLogClient.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/DawnSqlLogRecovery/DawnSqlLogRecovery.iml" filepath="$PROJECT_DIR$/modules/DawnSqlLogRecovery/DawnSqlLogRecovery.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/DawnSqlLogService/DawnSqlLogService.iml" filepath="$PROJECT_DIR$/modules/DawnSqlLogService/DawnSqlLogService.iml" />

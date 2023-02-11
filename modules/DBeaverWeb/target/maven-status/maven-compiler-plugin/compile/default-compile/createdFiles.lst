@@ -27,6 +27,7 @@ org/gridgain/dawn/rpc/MyRpcService$executeSqlQuery_result$_Fields.class
 org/gridgain/dawn/rpc/MyRpcService$executeSqlQuery_args.class
 org/dawnsql/client/controller/MyWorkbenchController.class
 org/gridgain/dawn/rpc/MyRpcService$executeSqlQuery_args$executeSqlQuery_argsStandardScheme.class
+org/dawnsql/client/tools/MyRpcDb$12.class
 org/gridgain/dawn/rpc/MyRpcService$Client.class
 org/dawnsql/client/tools/MyRpcDb$5.class
 org/gridgain/dawn/rpc/MyRpcService$AsyncProcessor.class

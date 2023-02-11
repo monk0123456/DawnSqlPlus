@@ -15,6 +15,15 @@ public class AppTest
     @Test
     public void shouldAnswerWithTrue()
     {
-        assertTrue( true );
+        String line = "abcabcbb";
+        char[] chs = line.toCharArray();
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < chs.length; i++)
+        {
+            sb.append("\"" + chs[i] + "\",");
+        }
+        System.out.println(sb.toString());
+        //assertTrue( true );
     }
+
 }

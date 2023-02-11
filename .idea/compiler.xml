@@ -9,13 +9,15 @@
         <outputRelativeToContentRoot value="true" />
         <module name="DawnSqlTransLog" />
         <module name="DawnSqlServerless" />
-        <module name="DawnSqlLogRecovery" />
+        <module name="DawnSqlLib" />
         <module name="DawnSqlLogService" />
-        <module name="DawnSqlLogClient" />
+        <module name="DawnSqlLogRecovery" />
         <module name="DBeaverWeb" />
+        <module name="DawnSqlLogClient" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="DawnSqlLib" target="1.8" />
       <module name="DawnSqlLogClient" target="1.8" />
       <module name="DawnSqlLogRecovery" target="1.8" />
       <module name="DawnSqlLogService" target="1.8" />

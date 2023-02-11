@@ -22,9 +22,8 @@ public class MyDawnSqlServerlessController {
                       @RequestParam(value = "params", required = false) String params) throws SQLException, ClassNotFoundException {
 
         Class.forName("org.apache.ignite.IgniteJdbcDriver");
-        String url = "jdbc:ignite:thin://127.0.0.1:10800/public?lazy=true";
-        JdbcThinConnection conn = (JdbcThinConnection) DriverManager.getConnection(url);
-        conn.setUserToken(user_token);
+        String url = "jdbc:ignite:thin://127.0.0.1:10800/public?lazy=true&userToken=" + user_token;
+        Connection conn = DriverManager.getConnection(url);
 
         String funcLine = func + "(" + params + ")";
 

@@ -33,6 +33,7 @@
         <module>modules/DawnSqlServerless</module>
         <module>modules/DawnSqlTransLog</module>
         <module>modules/DBeaverWeb</module>
+        <module>modules/DawnSqlLib</module>
     </modules>
 
     <profiles>
